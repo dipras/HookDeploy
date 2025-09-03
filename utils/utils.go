@@ -16,7 +16,7 @@ func GenerateSignature(secret string, body []byte) string {
 }
 
 func WriteLog(message string) error {
-	filename := "log"
+	filename := ".log"
 
 	f, err := os.OpenFile(filename, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
 	if err != nil {
