@@ -1,0 +1,10 @@
+name: Name of your repository
+directory: /home/dipras/
+on_push:
+  - name: Update system
+    cmd: ls
+    args: []
+
+  - name: Test echo
+    cmd: echo
+    args: ["Hello World"]
