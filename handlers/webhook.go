@@ -21,7 +21,7 @@ type Command struct {
 }
 
 type Config struct {
-	directory    string    `yaml:"directory"`
+	Directory    string    `yaml:"directory"`
 	PushCommands []Command `yaml:"on_push"`
 }
 
@@ -63,7 +63,7 @@ func WebhookHandler(c *gin.Context) {
 		fmt.Printf("➡️  Running: %s\n", c.Name)
 
 		cmd := exec.Command(c.Cmd, c.Args...)
-		cmd.Dir = cfg.directory
+		cmd.Dir = cfg.Directory
 		_, err := cmd.CombinedOutput()
 		if err != nil {
 			fmt.Printf("❌ Error: %v\n", err)
