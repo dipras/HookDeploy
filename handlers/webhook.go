@@ -48,28 +48,30 @@ func WebhookHandler(c *gin.Context) {
 		return
 	}
 
-	data, err := os.ReadFile("config.yaml")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	var cfg Config
-	err = yaml.Unmarshal(data, &cfg)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	for _, c := range cfg.PushCommands {
-		fmt.Printf("➡️  Running: %s\n", c.Name)
-
-		cmd := exec.Command(c.Cmd, c.Args...)
-		cmd.Dir = cfg.Directory
-		_, err := cmd.CombinedOutput()
-		if err != nil {
-			fmt.Printf("❌ Error: %v\n", err)
-			utils.WriteLog(fmt.Sprintf("❌ Error: %v", err))
-		}
-	}
-
 	c.JSON(http.StatusOK, gin.H{"status": "ok"})
+
+	go func() {
+		data, err := os.ReadFile("config.yaml")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		var cfg Config
+		err = yaml.Unmarshal(data, &cfg)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		for _, c := range cfg.PushCommands {
+			fmt.Printf("➡️  Running: %s\n", c.Name)
+
+			cmd := exec.Command(c.Cmd, c.Args...)
+			cmd.Dir = cfg.Directory
+			_, err := cmd.CombinedOutput()
+			if err != nil {
+				fmt.Printf("❌ Error: %v\n", err)
+				utils.WriteLog(fmt.Sprintf("❌ Error: %v", err))
+			}
+		}
+	}()
 }
