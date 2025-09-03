@@ -14,15 +14,27 @@ With HookDeploy, every time code changes (push) occur in your repository, it can
 
 ---
 
-## 📦 Installation
+## 📦 Setup
 Make sure you have **Go 1.21+** installed.
 
+### 1. Installing
 ```bash
-git clone https://github.com/username/hookdeploy.git
+git clone https://github.com/dipras/HookDeploy.git
 cd hookdeploy
 go mod tidy
-go run main.go
 ```
+### 2. Add .env file
+You can check the example in `.env.example` file
+
+### 3. Set your script
+The script for deployment is using yaml named `config.yaml`, you can check the example in `config.yaml.example`
+
+## 🌟 Next Feature
+- [ ] Multi Repository
+- [ ] Logging & Monitoring
+- [ ] Web Dashboard
+- [ ] Environment Variable
+- [ ] Notification
 
 ## License
 This project is licensed under the [GNU GPLv2](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
