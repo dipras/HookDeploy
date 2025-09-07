@@ -1,10 +1,10 @@
-name: Name of your repository
-directory: /home/dipras/
+directory: /home/dipras/Data/Coding/Task/open-source/nxensite
+repository: dipras/HookDeploy
 on_push:
-  - name: Update system
+  - name: Git pull
+    cmd: git
+    args: ["pull", "origin", "master"]
+
+  - name: ls system
     cmd: ls
     args: []
-
-  - name: Test echo
-    cmd: echo
-    args: ["Hello World"]

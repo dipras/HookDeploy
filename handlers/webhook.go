@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"strings"
 
 	"io"
 
@@ -23,6 +24,7 @@ type Command struct {
 type Config struct {
 	Directory    string    `yaml:"directory"`
 	PushCommands []Command `yaml:"on_push"`
+	Repository   string    `yaml:"repository"`
 }
 
 func WebhookHandler(c *gin.Context) {
@@ -62,15 +64,20 @@ func WebhookHandler(c *gin.Context) {
 			log.Fatal(err)
 		}
 
+		utils.WriteLog(fmt.Sprintf("Deploy %s", cfg.Repository))
+		logName := "logs/" + strings.ReplaceAll(cfg.Repository, "/", "_") + ".log"
 		for _, c := range cfg.PushCommands {
 			fmt.Printf("➡️  Running: %s\n", c.Name)
 
 			cmd := exec.Command(c.Cmd, c.Args...)
 			cmd.Dir = cfg.Directory
-			_, err := cmd.CombinedOutput()
+			output, err := cmd.CombinedOutput()
+			utils.WriteLog(string(output), logName)
 			if err != nil {
 				fmt.Printf("❌ Error: %v\n", err)
-				utils.WriteLog(fmt.Sprintf("❌ Error: %v", err))
+				utils.WriteLog(fmt.Sprintf("❌ Error: %v", err), logName)
+				utils.WriteLog(fmt.Sprintf("❌ Failed execute: %s", cfg.Repository))
+				break
 			}
 		}
 	}()

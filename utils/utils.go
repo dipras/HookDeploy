@@ -15,10 +15,13 @@ func GenerateSignature(secret string, body []byte) string {
 	return "sha256=" + hex.EncodeToString(expectedMAC)
 }
 
-func WriteLog(message string) error {
-	filename := ".log"
+func WriteLog(message string, filename ...string) error {
+	logFile := ".log"
+	if len(filename) > 0 && filename[0] != "" {
+		logFile = filename[0]
+	}
 
-	f, err := os.OpenFile(filename, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
+	f, err := os.OpenFile(logFile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
 	if err != nil {
 		return err
 	}
