@@ -1,5 +1,5 @@
-directory: /home/dipras/Data/Coding/Task/open-source/nxensite
-repository: dipras/HookDeploy
+directory: /home/dipras/Data/Coding/nxensite
+repository: dipras/nxensite
 on_push:
   - name: Git pull
     cmd: git

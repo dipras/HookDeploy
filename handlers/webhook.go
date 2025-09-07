@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"HookDeploy/utils"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -50,14 +51,44 @@ func WebhookHandler(c *gin.Context) {
 		return
 	}
 
+	// Parse JSON body to check repository information
+	var payload map[string]interface{}
+	if err := json.Unmarshal(body, &payload); err != nil {
+		utils.WriteLog("Error: cannot parse webhook payload")
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON payload"})
+		return
+	}
+
+	// Check if repository object exists and has a full_name property
+	repo, repoExists := payload["repository"].(map[string]interface{})
+	if !repoExists {
+		utils.WriteLog("Error: repository information missing in payload")
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Repository information missing"})
+		return
+	}
+
+	fullName, fullNameExists := repo["full_name"].(string)
+	if !fullNameExists {
+		utils.WriteLog("Error: repository full_name missing in payload")
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Repository full_name missing"})
+		return
+	}
+
+	cfgPath := "configs/" + strings.ReplaceAll(fullName, "/", "_") + ".yaml"
+	data, err := os.ReadFile(cfgPath)
+
+	if err != nil {
+		utils.WriteLog("Error: can't receive information from " + fullName)
+		c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("can't receive information from %s", fullName)})
+		return
+	}
+
+	// Now you can use fullName variable which contains the repository full_name
+	utils.WriteLog(fmt.Sprintf("Received webhook from repository: %s", fullName))
+
 	c.JSON(http.StatusOK, gin.H{"status": "ok"})
 
 	go func() {
-		data, err := os.ReadFile("config.yaml")
-		if err != nil {
-			log.Fatal(err)
-		}
-
 		var cfg Config
 		err = yaml.Unmarshal(data, &cfg)
 		if err != nil {

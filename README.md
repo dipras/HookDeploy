@@ -10,7 +10,7 @@ With HookDeploy, every time code changes (push) occur in your repository, it can
 - ⚙️ **Custom Command Execution** → run commands defined in `config.yaml`.
 - 🛡️ **Signature Verification** → ensure the request is truly from GitHub (HMAC SHA-256).
 - 📂 **Simple Configuration** → just a YAML file, easy to read and edit.
-- 🔧 **Single Repository Focus** → lightweight and simple, perfect for personal projects or small servers.
+- 🔧 **Multi Repository Focus** → lightweight and simple, perfect for personal projects or small servers.
 
 ---
 
@@ -26,12 +26,13 @@ go mod tidy
 ### 2. Add .env file
 You can check the example in `.env.example` file
 
-### 3. Set your script
-The script for deployment is using yaml named `config.yaml`, you can check the example in `config.yaml.example`
+### 3. Set your configs for deploy repositories
+You can write your configs for deployment in folder `configs`. The name of config should using your repository name with `/` replace by `_` and followed by `.yaml`. For example, if your repository named `dipras/nxensite`, then you should named the script like this `dipras_nxensite.yaml` 
 
 ## 🌟 Next Feature
-- [ ] Multi Repository
-- [ ] Logging & Monitoring
+- [x] Multi Repository
+- [x] Better logging for each repository
+- [ ] Monitoring the log
 - [ ] Web Dashboard
 - [ ] Environment Variable
 - [ ] Notification
